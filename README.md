@@ -20,7 +20,6 @@ This fork of MLX42 introduces compatibility with [Emscripten](https://emscripten
 
 - **Emscripten Support**: Adapted MLX42 to compile with Emscripten, enabling graphical applications to run in a web environment.
 - **WebAssembly Compatibility**: Ensures that MLX42 can be utilized in modern web browsers, expanding its usability beyond traditional desktop environments.
-- **Updated Documentation**: Provided guidance on how to build and run MLX42 projects using Emscripten.
 
 MLX42 is a performant, easy to use, cross-platform, minimal windowing graphics library to create graphical applications without having to work directly with the native windowing framework of the given operating system.
 
