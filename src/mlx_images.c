@@ -204,7 +204,7 @@ mlx_image_t* mlx_new_image(mlx_t* mlx, uint32_t width, uint32_t height)
 void mlx_delete_image(mlx_t* mlx, mlx_image_t* image)
 {
 	MLX_NONNULL(mlx);
-	MLX_NONNULL(image);
+	//MLX_NONNULL(image);
 
 	mlx_ctx_t* mlxctx = mlx->context;
 

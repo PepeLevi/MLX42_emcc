@@ -357,9 +357,12 @@ typedef struct mlx_image
  * @param delta_time The time difference between the previous frame 
  * and the current frame.
  */
+
+typedef struct GLFWwindow GLFWwindow;
+
 typedef struct mlx
 {
-	void*		window;
+	GLFWwindow*		window;
 	void*		context;
 	int32_t		width;
 	int32_t		height;

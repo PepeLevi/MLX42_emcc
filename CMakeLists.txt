@@ -5,8 +5,8 @@
 
 # CMake specifications
 # -----------------------------------------------------------------------------
-cmake_minimum_required (VERSION 3.16.0)
-project(mlx42 VERSION 2.3.4)
+cmake_minimum_required(VERSION 3.18.0)
+project(mlx42 VERSION 2.3.3)
 message(STATUS "MLX42 @ ${CMAKE_PROJECT_VERSION}")
 
 # Variables
@@ -23,9 +23,9 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 # Options
-set(DEBUG		OFF CACHE BOOL "Build MLX42 in debug mode, enabling assertions")
-set(GLFW_FETCH	ON CACHE BOOL "Clone and install GLFW")
-set(BUILD_TESTS	OFF CACHE BOOL "Build the tests to verify the integrity of the lib")
+set(DEBUG OFF CACHE BOOL "Build MLX42 in debug mode, enabling assertions")
+set(GLFW_FETCH ON CACHE BOOL "Clone and install GLFW")
+set(BUILD_TESTS OFF CACHE BOOL "Build the tests to verify the integrity of the lib")
 
 # Compile Options
 # -----------------------------------------------------------------------------
@@ -34,115 +34,124 @@ set(BUILD_TESTS	OFF CACHE BOOL "Build the tests to verify the integrity of the l
 add_definitions(-D LODEPNG_NO_COMPILE_ENCODER)
 add_definitions(-D LODEPNG_NO_COMPILE_ANCILLARY_CHUNKS)
 
-if(UNIX)
-	set(CCSHADER ${PROJECT_SOURCE_DIR}/tools/compile_shader.sh)
-	add_compile_options(
-		-Wextra
-		-Wall
-		-Werror
-		-Wunreachable-code
-		
-		# Some low priority warnings that are annoying.
-		-Wno-char-subscripts
-		-Wno-sign-compare
-		-Wno-unused-parameter
-		-Wno-missing-field-initializers
-	)
-	if(DEBUG)
-		message(STATUS "Building in DEBUG mode")
-		add_compile_options(-g)
-	else()
-		message(STATUS "Building in RELEASE mode")
-		add_definitions(-D NDEBUG)
-		add_compile_options(-Ofast)
-	endif(DEBUG)
+if(UNIX AND NOT EMSCRIPTEN)
+    set(CCSHADER ${PROJECT_SOURCE_DIR}/tools/compile_shader.sh)
+    add_compile_options(
+        -Wextra
+        -Wall
+        -Werror
+        -Wunreachable-code
+        
+        # Some low priority warnings that are annoying.
+        -Wno-char-subscripts
+        -Wno-sign-compare
+        -Wno-unused-parameter
+        -Wno-missing-field-initializers
+    )
+    if(DEBUG)
+        message(STATUS "Building in DEBUG mode")
+        add_compile_options(-g)
+    else()
+        message(STATUS "Building in RELEASE mode")
+        add_definitions(-D NDEBUG)
+        add_compile_options(-Ofast)
+    endif(DEBUG)
 else()
-	# TODO: Figure out what we need for windows.
-	set(CCSHADER ${PROJECT_SOURCE_DIR}/tools/compile_shader.bat)
+    # TODO: Figure out what we need for windows.
+    set(CCSHADER ${PROJECT_SOURCE_DIR}/tools/compile_shader.bat)
 endif()
 
 # Build specific files
 # @see https://cmake.org/cmake/help/latest/command/add_custom_command.html
 # -----------------------------------------------------------------------------
 
+if (UNIX)
+    set(CCSHADER ${PROJECT_SOURCE_DIR}/tools/compile_shader.sh)
+else()
+    set(CCSHADER ${PROJECT_SOURCE_DIR}/tools/compile_shader.bat)
+endif()
+
 add_custom_command(
-	COMMENT "Building fragment shader"
-	DEPENDS ${PROJECT_SOURCE_DIR}/shaders/default.frag
-	OUTPUT mlx_frag_shader.c
-	COMMAND ${CCSHADER} ${PROJECT_SOURCE_DIR}/shaders/default.frag > mlx_frag_shader.c
-	VERBATIM
-	PRE_BUILD
-	USES_TERMINAL
+    COMMENT "Building fragment shader"
+    DEPENDS ${PROJECT_SOURCE_DIR}/shaders/default.frag
+    OUTPUT mlx_frag_shader.c
+    COMMAND ${CCSHADER} ${PROJECT_SOURCE_DIR}/shaders/default.frag > mlx_frag_shader.c
+    VERBATIM
+    PRE_BUILD
+    USES_TERMINAL
 )
 
 add_custom_command(
-	COMMENT "Building vertex shader"
-	DEPENDS ${PROJECT_SOURCE_DIR}/shaders/default.vert
-	OUTPUT mlx_vert_shader.c
-	COMMAND ${CCSHADER} ${PROJECT_SOURCE_DIR}/shaders/default.vert > mlx_vert_shader.c
-	VERBATIM
-	PRE_BUILD
-	USES_TERMINAL
+    COMMENT "Building vertex shader"
+    DEPENDS ${PROJECT_SOURCE_DIR}/shaders/default.vert
+    OUTPUT mlx_vert_shader.c
+    COMMAND ${CCSHADER} ${PROJECT_SOURCE_DIR}/shaders/default.vert > mlx_vert_shader.c
+    VERBATIM
+    PRE_BUILD
+    USES_TERMINAL
 )
 
 # Sources
 # -----------------------------------------------------------------------------
 add_library(mlx42 STATIC
 
-	# Root
-	${SOURCE_DIR}/mlx_cursor.c
-	${SOURCE_DIR}/mlx_exit.c
-	${SOURCE_DIR}/mlx_images.c
-	${SOURCE_DIR}/mlx_init.c
-	${SOURCE_DIR}/mlx_keys.c
-	${SOURCE_DIR}/mlx_loop.c
-	${SOURCE_DIR}/mlx_monitor.c
-	${SOURCE_DIR}/mlx_mouse.c
-	${SOURCE_DIR}/mlx_put_pixel.c
-	${SOURCE_DIR}/mlx_window.c
+    # Root
+    ${SOURCE_DIR}/mlx_cursor.c
+    ${SOURCE_DIR}/mlx_exit.c
+    ${SOURCE_DIR}/mlx_images.c
+    ${SOURCE_DIR}/mlx_init.c
+    ${SOURCE_DIR}/mlx_keys.c
+    ${SOURCE_DIR}/mlx_loop.c
+    ${SOURCE_DIR}/mlx_monitor.c
+    ${SOURCE_DIR}/mlx_mouse.c
+    ${SOURCE_DIR}/mlx_put_pixel.c
+    ${SOURCE_DIR}/mlx_window.c
 
-	# Utils
-	${SOURCE_DIR}/utils/mlx_error.c
-	${SOURCE_DIR}/utils/mlx_list.c
-	${SOURCE_DIR}/utils/mlx_utils.c
-	${SOURCE_DIR}/utils/mlx_compare.c
+    # Utils
+    ${SOURCE_DIR}/utils/mlx_error.c
+    ${SOURCE_DIR}/utils/mlx_list.c
+    ${SOURCE_DIR}/utils/mlx_utils.c
+    ${SOURCE_DIR}/utils/mlx_compare.c
 
-	# Textures
-	${SOURCE_DIR}/font/mlx_font.c
-	${SOURCE_DIR}/textures/mlx_png.c
-	${SOURCE_DIR}/textures/mlx_texture.c
-	${SOURCE_DIR}/textures/mlx_xpm42.c
+    # Textures
+    ${SOURCE_DIR}/font/mlx_font.c
+    ${SOURCE_DIR}/textures/mlx_png.c
+    ${SOURCE_DIR}/textures/mlx_texture.c
+    ${SOURCE_DIR}/textures/mlx_xpm42.c
 
-	# Libs
-	lib/png/lodepng.c
-	lib/glad/glad.c
+    # Libs
+    lib/png/lodepng.c
+    lib/glad/glad.c
 
-	mlx_vert_shader.c
-	mlx_frag_shader.c
+    mlx_vert_shader.c
+    mlx_frag_shader.c
 )
 target_include_directories(mlx42 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # Dependencies
 # -----------------------------------------------------------------------------
 
-find_package(glfw3)
 find_package(OpenGL REQUIRED)
 
-target_link_libraries(mlx42 OpenGL::GL)
-if (NOT glfw3_FOUND AND GLFW_FETCH)
-	message(STATUS "Install GLFW to suppress this message")
-	message(STATUS "Please wait, fetching GLFW ...")
-	include(${CMAKE_DIR}/LinkGLFW.cmake)
-	LinkGLFW(mlx42)
-elseif(NOT glfw3_FOUND AND NOT GLFW_FETCH)
-	message(FATAL_ERROR "Unable to build: GLFW can't be found nor fetched.")
-endif()
+if(EMSCRIPTEN)
+    target_link_libraries(mlx42 "-s USE_GLFW=3" "-s FULL_ES3=1")
+else()
+    target_link_libraries(mlx42 OpenGL::GL)
+    find_package(glfw3)
+    if (NOT glfw3_FOUND AND GLFW_FETCH)
+        message(STATUS "Install GLFW to suppress this message")
+        message(STATUS "Please wait, fetching GLFW ...")
+        include(${CMAKE_DIR}/LinkGLFW.cmake)
+        LinkGLFW(mlx42)
+    elseif(NOT glfw3_FOUND AND NOT GLFW_FETCH)
+        message(FATAL_ERROR "Unable to build: GLFW can't be found nor fetched.")
+    else()
+        target_link_libraries(mlx42 ${GLFW3_LIBRARY})
+    endif()
 
-if (glfw3_FOUND)
-	target_link_libraries(mlx42 ${GLFW3_LIBRARY})
-endif()
-if(APPLE)
-	target_link_libraries(mlx42 "-framework Cocoa" "-framework IOKit")
+    if(APPLE)
+        target_link_libraries(mlx42 "-framework Cocoa" "-framework IOKit")
+    endif()
 endif()
 
 # Testing
@@ -152,8 +161,8 @@ endif()
 # use cmake -DBUILD_TESTS=ON/-DMLX42_BUILD_TESTS=ON to build tests
 
 if ((PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME AND BUILD_TESTS) OR MLX42_BUILD_TESTS)
-	add_subdirectory(tests)
-	enable_testing()
+    add_subdirectory(tests)
+    enable_testing()
 endif()
 
 # Installation
@@ -168,13 +177,13 @@ endif()
 # ambitions to use this for anything other than your own school projects.
 
 install(
-	DIRECTORY ./include/MLX42 DESTINATION ${CMAKE_INSTALL_PREFIX}/include
-	FILES_MATCHING PATTERN MLX42.h
+    DIRECTORY ./include/MLX42 DESTINATION ${CMAKE_INSTALL_PREFIX}/include
+    FILES_MATCHING PATTERN MLX42.h
 )
 
 install(TARGETS mlx42
-	EXPORT mlx42Targets
-	RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-	ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-	LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    EXPORT mlx42Targets
+    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 )

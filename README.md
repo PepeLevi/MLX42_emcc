@@ -4,13 +4,23 @@
 </div>
 <div align="center">
   <sub>Written by <a href="https://portfolio.w2wizard.dev/">W2.Wizard</a> for Codam</sub>
-    <div align="center">
-	</br>
-	<img src="https://img.shields.io/github/license/codam-coding-college/MLX42" alt="License GPL2.0"> 
-	<img src="https://github.com/codam-coding-college/MLX42/actions/workflows/ci.yml/badge.svg" alt="Build">
-	<img src="https://img.shields.io/github/forks/codam-coding-college/MLX42" alt="Forks">
-    </div>
+  <div align="center">
+    </br>
+    <img src="https://img.shields.io/github/license/codam-coding-college/MLX42" alt="License GPL2.0"> 
+    <img src="https://github.com/codam-coding-college/MLX42/actions/workflows/ci.yml/badge.svg" alt="Build">
+    <img src="https://img.shields.io/github/forks/codam-coding-college/MLX42" alt="Forks">
+  </div>
 </div>
+
+# MLX42 for Emscripten Compatibility 🚀
+
+This fork of MLX42 introduces compatibility with [Emscripten](https://emscripten.org/), allowing MLX42 to run in web browsers through WebAssembly. This modification makes it possible to use MLX42 in web-based projects without requiring native windowing frameworks.
+
+## Contribution Highlights
+
+- **Emscripten Support**: Adapted MLX42 to compile with Emscripten, enabling graphical applications to run in a web environment.
+- **WebAssembly Compatibility**: Ensures that MLX42 can be utilized in modern web browsers, expanding its usability beyond traditional desktop environments.
+- **Updated Documentation**: Provided guidance on how to build and run MLX42 projects using Emscripten.
 
 MLX42 is a performant, easy to use, cross-platform, minimal windowing graphics library to create graphical applications without having to work directly with the native windowing framework of the given operating system.
 
@@ -38,9 +48,6 @@ It is built on OpenGL and uses batched rendering to speed up the rendering proce
 
 ## Open source && Community driven 🌐
 This project is being actively maintained by Codam as well as students from the 42 Network. This gives students the direct opportunity to learn more about the library itself as well as fix any potential bugs instead of merely accepting them.
-
-> [!IMPORTANT]
-> At times it may seem like no updates have taken place for a long time. This is expected, the project / lib is considered completed and requires minimal updates. Bug fixes are still guaranteed and the project is still being actively maintained.
 
 ---
 

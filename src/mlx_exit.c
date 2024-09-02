@@ -36,7 +36,6 @@ void mlx_close_window(mlx_t* mlx)
 void mlx_terminate(mlx_t* mlx)
 {
 	MLX_NONNULL(mlx);
-
 	mlx_ctx_t *const mlxctx = mlx->context;
 
 	glUseProgram(0);

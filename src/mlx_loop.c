@@ -95,8 +95,6 @@ void mlx_loop(mlx_t* mlx)
 	MLX_NONNULL(mlx);
 
 	double start, oldstart = 0;
-	while (!glfwWindowShouldClose(mlx->window))
-	{
 		start = glfwGetTime();
 		mlx->delta_time = start - oldstart;
 		oldstart = start;
@@ -114,5 +112,4 @@ void mlx_loop(mlx_t* mlx)
 
 		glfwSwapBuffers(mlx->window);
 		glfwPollEvents();
-	}
 }

@@ -43,7 +43,7 @@ void mlx_key_hook(mlx_t* mlx, mlx_keyfunc func, void* param)
 
 bool mlx_is_key_down(mlx_t* mlx, keys_t key)
 {
-	MLX_NONNULL(mlx);
+	//MLX_NONNULL(mlx);
 
 	return (glfwGetKey(mlx->window, key) == GLFW_PRESS);
 }

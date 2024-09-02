@@ -4,6 +4,14 @@
 # See README in the root project for more information.
 # -----------------------------------------------------------------------------
 
+input_file=$1
+output_file=$(basename "$input_file" .frag).c
+
+echo "// Generated shader source from $input_file" > $output_file
+echo "const char *shader_source = R\"GLSL(" >> $output_file
+cat $input_file >> $output_file
+echo ")GLSL\";" >> $output_file
+
 # If no arguments have been given, exit with error code 1
 if [ "$#" -ne 1 ]; then
 	echo "ERROR: missing arguments, use as follows: $0 <ShaderFile>" 1>&2
